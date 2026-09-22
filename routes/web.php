@@ -6,10 +6,14 @@ use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
-Route::get('register', [AuthController::class, 'showRegister'])->name('show.register');
-Route::get('login', [AuthController::class, 'showLogin'])->name('show.login');
+Route::get('/register', [AuthController::class, 'showRegister'])
+    ->name('register');
+
+Route::get('/login', [AuthController::class, 'showLogin'])
+    ->name('login');
+
 
 Route::get('/ninjas', [NinjaController::class, 'index'])->name('ninjas.index');
 Route::get('/ninjas/create', [NinjaController::class, 'create'])->name('ninjas.create');
