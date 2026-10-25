@@ -90,3 +90,36 @@ test('a guest sees login and register links without errors', function () {
     $response->assertDontSee('Hi there');
     $response->assertDontSee('action="' . route('logout') . '"', false);
 });
+
+// week 8 - protecting routes
+test('guests are redirected to the login page from protected routes', function (string $method, string $uri) {
+    $response = $this->{$method}($uri);
+
+    $response->assertRedirect('/login');
+    $this->assertGuest();
+})->with([
+    'ninjas index' => ['get', '/ninjas'],
+    'ninjas create' => ['get', '/ninjas/create'],
+    'ninjas show' => ['get', '/ninjas/1'],
+    'ninjas store' => ['post', '/ninjas'],
+    'ninjas destroy' => ['delete', '/ninjas/1'],
+]);
+
+test('logged in users can access protected routes', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get(route('ninjas.index'))->assertOk();
+    $this->actingAs($user)->get(route('ninjas.create'))->assertOk();
+});
+
+test('logged in users cannot visit the login and register pages', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get(route('show.login'))->assertRedirect('/');
+    $this->actingAs($user)->get(route('show.register'))->assertRedirect('/');
+});
+
+test('guests can visit the login and register pages', function () {
+    $this->get(route('show.login'))->assertOk();
+    $this->get(route('show.register'))->assertOk();
+});

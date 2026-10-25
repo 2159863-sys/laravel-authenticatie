@@ -8,32 +8,38 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/register', [AuthController::class, 'showRegister'])
-    ->name('show.register');
-
-Route::get('/login', [AuthController::class, 'showLogin'])
-    ->name('show.login');
-
-Route::post('/register', [AuthController::class, 'register'])
-    ->name('register');
-
-Route::post('/login', [AuthController::class, 'login'])
-    ->name('login');
-
+// auth
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
-Route::get('/ninjas', [NinjaController::class, 'index'])
-    ->name('ninjas.index');
+Route::middleware('guest')->controller(AuthController::class)->group(function () {
+    Route::get('/register', 'showRegister')
+        ->name('show.register');
 
-Route::get('/ninjas/create', [NinjaController::class, 'create'])
-    ->name('ninjas.create');
+    Route::get('/login', 'showLogin')
+        ->name('show.login');
 
-Route::get('/ninjas/{ninja}', [NinjaController::class, 'show'])
-    ->name('ninjas.show');
+    Route::post('/register', 'register')
+        ->name('register');
 
-Route::post('/ninjas', [NinjaController::class, 'store'])
-    ->name('ninjas.store');
+    Route::post('/login', 'login')
+        ->name('login');
+});
 
-Route::delete('/ninjas/{ninja}', [NinjaController::class, 'destroy'])
-    ->name('ninjas.destroy');
+// ninjas
+Route::middleware('auth')->controller(NinjaController::class)->group(function () {
+    Route::get('/ninjas', 'index')
+        ->name('ninjas.index');
+
+    Route::get('/ninjas/create', 'create')
+        ->name('ninjas.create');
+
+    Route::get('/ninjas/{ninja}', 'show')
+        ->name('ninjas.show');
+
+    Route::post('/ninjas', 'store')
+        ->name('ninjas.store');
+
+    Route::delete('/ninjas/{ninja}', 'destroy')
+        ->name('ninjas.destroy');
+});
