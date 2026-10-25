@@ -123,3 +123,39 @@ test('guests can visit the login and register pages', function () {
     $this->get(route('show.login'))->assertOk();
     $this->get(route('show.register'))->assertOk();
 });
+
+// week 4 - registering users
+test('a guest can register and is logged in', function () {
+    $response = $this->post(route('register'), [
+        'name' => 'New Ninja',
+        'email' => 'new@ninja.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ]);
+
+    $response->assertRedirect(route('ninjas.index'));
+    $this->assertAuthenticated();
+    $this->assertDatabaseHas('users', ['email' => 'new@ninja.com']);
+    expect(User::first()->password)->not->toBe('password123');
+});
+
+test('registration is validated', function () {
+    User::factory()->create(['email' => 'taken@ninja.com']);
+
+    $response = $this->post(route('register'), [
+        'name' => '',
+        'email' => 'taken@ninja.com',
+        'password' => 'short',
+        'password_confirmation' => 'different',
+    ]);
+
+    $response->assertSessionHasErrors(['name', 'email', 'password']);
+    $this->assertGuest();
+});
+
+test('registration errors are shown on the register page', function () {
+    $this->followingRedirects()
+        ->from(route('show.register'))
+        ->post(route('register'), ['name' => 'X', 'email' => 'x@ninja.com', 'password' => 'short', 'password_confirmation' => 'short'])
+        ->assertSee('The password field must be at least 8 characters.');
+});
