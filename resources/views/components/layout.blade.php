@@ -33,24 +33,32 @@
                 </a>
             </h1>
 
-            <a href="{{ route('ninjas.create') }}">
-                Create New Ninja
-            </a>
+            @guest
+                <a href="{{ route('show.register') }}" class="btn">
+                    Register
+                </a>
 
-            <a href="{{ route('show.register') }}" class="btn">
-                Register
-            </a>
+                <a href="{{ route('show.login') }}" class="btn">
+                    Login
+                </a>
+            @endguest
 
-            <a href="{{ route('show.login') }}" class="btn">
-                Login
-            </a>
+            @auth
+                <span class="border-r-2 pr-5">
+                    Hi there, {{ Auth::user()->name }}
+                </span>
 
-            <form action="{{ route('logout') }}" method="POST" class="m-0">
-                @csrf
-                <button type="submit" class="btn">
-                    Logout
-                </button>
-            </form>
+                <a href="{{ route('ninjas.create') }}">
+                    Create New Ninja
+                </a>
+
+                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                    @csrf
+                    <button type="submit" class="btn">
+                        Logout
+                    </button>
+                </form>
+            @endauth
 
         </nav>
     </header>

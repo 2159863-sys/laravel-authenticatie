@@ -16,7 +16,9 @@ test('a logged in user can log out', function () {
 });
 
 test('the layout shows a logout form with csrf protection', function () {
-    $response = $this->get(route('show.login'));
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->get(route('ninjas.index'));
 
     $response->assertSee('action="' . route('logout') . '"', false);
     $response->assertSee('name="_token"', false);
@@ -63,4 +65,28 @@ test('login errors are shown on the login page', function () {
         ->from(route('show.login'))
         ->post(route('login'), ['email' => 'nobody@example.com', 'password' => 'secret123'])
         ->assertSee('Sorry, incorrect credentials');
+});
+
+// week 7 - current user
+test('a logged in user sees their name and the logout button', function () {
+    $user = User::factory()->create(['name' => 'Shaun Ninja']);
+
+    $response = $this->actingAs($user)->get(route('ninjas.index'));
+
+    $response->assertOk();
+    $response->assertSee('Hi there, Shaun Ninja');
+    $response->assertSee('Logout');
+    $response->assertSee('Create New Ninja');
+    $response->assertDontSee('href="' . route('show.login') . '"', false);
+    $response->assertDontSee('href="' . route('show.register') . '"', false);
+});
+
+test('a guest sees login and register links without errors', function () {
+    $response = $this->get(route('show.login'));
+
+    $response->assertOk();
+    $response->assertSee('href="' . route('show.login') . '"', false);
+    $response->assertSee('href="' . route('show.register') . '"', false);
+    $response->assertDontSee('Hi there');
+    $response->assertDontSee('action="' . route('logout') . '"', false);
 });
