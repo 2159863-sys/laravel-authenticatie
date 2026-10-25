@@ -5,7 +5,9 @@ use App\Http\Controllers\NinjaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return auth()->check()
+        ? redirect()->route('ninjas.index')
+        : redirect()->route('show.login');
 });
 
 // auth

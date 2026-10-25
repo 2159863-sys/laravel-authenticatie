@@ -57,3 +57,32 @@ input, select, textarea {
 .btn {
   @apply rounded px-3 py-2 bg-gray-200 hover:bg-red-500 hover:text-white;
 }
+
+/* login & register */
+.auth-form {
+  @apply max-w-md mx-auto mt-8 bg-white rounded-xl shadow-lg border border-gray-200 px-8 py-10;
+
+  h2 {
+    @apply text-2xl text-center mt-0 mb-8 text-gray-800;
+  }
+  label {
+    @apply text-sm font-medium text-gray-600;
+  }
+  input {
+    @apply rounded-lg border border-gray-300 bg-gray-50 px-3 py-2
+      focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 focus:bg-white;
+  }
+  .btn {
+    @apply w-full mt-4 py-3 font-semibold bg-red-500 text-white hover:bg-red-600 transition-colors;
+  }
+  .switch {
+    @apply text-center text-sm text-gray-500 mt-6;
+
+    a {
+      @apply text-red-500 font-semibold hover:underline;
+    }
+  }
+  ul {
+    @apply mt-6 mb-0 rounded-lg;
+  }
+}

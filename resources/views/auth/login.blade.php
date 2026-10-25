@@ -1,6 +1,6 @@
 <x-layout>
 
-    <form action="{{ route('login') }}" method="POST">
+    <form action="{{ route('login') }}" method="POST" class="auth-form">
         @csrf
 
         <h2>Log In to Your Account</h2>
@@ -20,9 +20,13 @@
             required
         >
 
-        <button type="submit" class="btn mt-4">
+        <button type="submit" class="btn">
             Log in
         </button>
+
+        <p class="switch">
+            Don't have an account? <a href="{{ route('show.register') }}">Register</a>
+        </p>
 
         <!-- validation errors -->
         @if ($errors->any())
